@@ -25,7 +25,7 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = false
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-public-${count.index + 1}"
+    Name = "${var.project_name}-${var.environment}-public-${count.index}"
     Tier = "public"
   }
 }
@@ -39,7 +39,7 @@ resource "aws_subnet" "private" {
   map_public_ip_on_launch = false
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-private-${count.index + 1}"
+    Name = "${var.project_name}-${var.environment}-private-${count.index}"
     Tier = "private"
   }
 }
@@ -73,7 +73,7 @@ resource "aws_eip" "nat" {
   domain = "vpc"
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-nat-eip-${count.index + 1}"
+    Name = "${var.project_name}-${var.environment}-nat-eip-${count.index}"
   }
 }
 
@@ -91,7 +91,7 @@ resource "aws_nat_gateway" "nat" {
   ]
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-nat-${count.index + 1}"
+    Name = "${var.project_name}-${var.environment}-nat-${count.index}"
   }
 }
 
@@ -101,7 +101,7 @@ resource "aws_route_table" "private" {
   vpc_id = aws_vpc.hospital_vpc.id
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-private-rt-${count.index + 1}"
+    Name = "${var.project_name}-${var.environment}-private-rt-${count.index}"
   }
 }
 
