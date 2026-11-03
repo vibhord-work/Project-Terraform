@@ -6,7 +6,7 @@ provider "aws" {
       Project     = var.project_name
       Environment = var.environment
       ManagedBy   = "Terraform"
-      Repository  = "hospital-infrastructure-terraform"
+      Repository  = "Project-Terraform"
     }
   }
 }
