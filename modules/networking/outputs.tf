@@ -1,6 +1,6 @@
 output "vpc_id" {
-  description = "ID of the Hospital VPC"
-  value       = aws_vpc.hospital_vpc.id
+  description = "ID of the Project VPC"
+  value       = aws_vpc.project_vpc.id
 }
 
 output "public_subnet_ids" {
@@ -15,7 +15,7 @@ output "private_subnet_ids" {
 
 output "internet_gateway_id" {
   description = "Internet Gateway ID"
-  value       = aws_internet_gateway.hospital_igw.id
+  value       = aws_internet_gateway.project_igw.id
 }
 
 output "nat_gateway_ids" {
