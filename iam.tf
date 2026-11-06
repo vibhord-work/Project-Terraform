@@ -61,3 +61,23 @@ resource "aws_iam_role" "ecs_task_role" {
     Name = "${var.project_name}-${var.environment}-ecs-task-role"
   }
 }
+data "aws_iam_policy_document" "ecs_rds_secret_access" {
+  statement {
+    sid    = "ReadRDSCredentials"
+    effect = "Allow"
+
+    actions = [
+      "secretsmanager:GetSecretValue"
+    ]
+
+    resources = [
+      aws_db_instance.project_mysql.master_user_secret[0].secret_arn
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "ecs_rds_secret_access" {
+  name   = "${var.project_name}-${var.environment}-rds-secret-access"
+  role   = aws_iam_role.ecs_task_execution_role.id
+  policy = data.aws_iam_policy_document.ecs_rds_secret_access.json
+}
