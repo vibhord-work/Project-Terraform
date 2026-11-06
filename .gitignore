@@ -7,5 +7,7 @@ crash.*.log
 *.tfvars
 !*.tfvars.example
 .env
+
+# Terraform plan files
 tfplan
 tfplan.*
