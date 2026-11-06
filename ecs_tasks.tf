@@ -19,7 +19,7 @@ resource "aws_ecs_task_definition" "frontend" {
 
       portMappings = [
         {
-          conainerPort = 80
+          containerPort = 80
           protocol     = "tcp"
         }
       ]
