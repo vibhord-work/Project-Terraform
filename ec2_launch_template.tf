@@ -11,9 +11,11 @@ resource "aws_launch_template" "ecs" {
     name = aws_iam_instance_profile.ecs_instance_profile.name
   }
 
-  vpc_security_group_ids = [
-    aws_security_group.ecs_sg.id
-  ]
+  # Keep ECS EC2 instances private
+  network_interfaces {
+    associate_public_ip_address = false
+    security_groups             = [aws_security_group.ecs_sg.id]
+  }
 
   user_data = base64encode(<<-EOF_USERDATA
     #!/bin/bash
