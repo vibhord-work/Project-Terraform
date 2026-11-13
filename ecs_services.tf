@@ -4,6 +4,10 @@ resource "aws_ecs_service" "frontend" {
   task_definition = aws_ecs_task_definition.frontend.arn
   desired_count   = 1
 
+  lifecycle {
+    ignore_changes = [task_definition]
+  }
+
   capacity_provider_strategy {
     capacity_provider = aws_ecs_capacity_provider.ecs.name
     weight            = 1
@@ -44,6 +48,10 @@ resource "aws_ecs_service" "backend" {
   cluster         = aws_ecs_cluster.project_cluster.id
   task_definition = aws_ecs_task_definition.backend.arn
   desired_count   = 1
+
+  lifecycle {
+    ignore_changes = [task_definition]
+  }
 
   capacity_provider_strategy {
     capacity_provider = aws_ecs_capacity_provider.ecs.name
