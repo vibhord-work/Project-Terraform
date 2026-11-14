@@ -10,6 +10,7 @@ data "aws_iam_policy_document" "jenkins_deployment" {
     sid = "ECRImagePush"
     actions = [
       "ecr:BatchCheckLayerAvailability",
+      "ecr:BatchGetImage",
       "ecr:CompleteLayerUpload",
       "ecr:InitiateLayerUpload",
       "ecr:PutImage",
