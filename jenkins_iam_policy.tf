@@ -22,14 +22,9 @@ data "aws_iam_policy_document" "jenkins_deployment" {
   }
 
   statement {
-    sid = "ECSDescribeTaskDefinitions"
-    actions = [
-      "ecs:DescribeTaskDefinition"
-    ]
-    resources = [
-      "arn:aws:ecs:${var.aws_region}:460249938865:task-definition/project-poc-frontend:*",
-      "arn:aws:ecs:${var.aws_region}:460249938865:task-definition/project-poc-backend:*"
-    ]
+    sid       = "ECSDescribeTaskDefinitions"
+    actions   = ["ecs:DescribeTaskDefinition"]
+    resources = ["*"]
   }
 
   statement {
