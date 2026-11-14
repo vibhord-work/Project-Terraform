@@ -48,9 +48,9 @@ resource "aws_vpc_security_group_egress_rule" "jenkins_outbound" {
 resource "aws_instance" "jenkins" {
   ami                         = data.aws_ssm_parameter.jenkins_ami.value
   instance_type               = "m7i-flex.large"
-  subnet_id                   = aws_subnet.public[0].id
+  subnet_id                   = aws_subnet.private[0].id
   vpc_security_group_ids      = [aws_security_group.jenkins_sg.id]
-  associate_public_ip_address = true
+  associate_public_ip_address = false
   iam_instance_profile        = aws_iam_instance_profile.jenkins_profile.name
 
   metadata_options {
@@ -73,8 +73,4 @@ resource "aws_instance" "jenkins" {
 
 output "jenkins_instance_id" {
   value = aws_instance.jenkins.id
-}
-
-output "jenkins_public_ip" {
-  value = aws_instance.jenkins.public_ip
 }
