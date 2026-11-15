@@ -14,16 +14,25 @@ resource "aws_ecs_task_definition" "frontend" {
     {
 
       name      = "frontend"
-      image     = "${aws_ecr_repository.frontend.repository_url}:v1"
+      image     = "${aws_ecr_repository.frontend.repository_url}:build-6-25157693bbd78e2831eb287cf07bf6053f70932e"
       essential = true
 
       portMappings = [
         {
           containerPort = 80
-          protocol     = "tcp"
+          protocol      = "tcp"
         }
       ]
       memoryReservation = 256
+
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs_frontend.name
+          "awslogs-region"        = var.aws_region
+          "awslogs-stream-prefix" = "frontend"
+        }
+      }
     }
   ])
 
@@ -51,7 +60,7 @@ resource "aws_ecs_task_definition" "backend" {
   container_definitions = jsonencode([
     {
       name      = "backend"
-      image     = "${aws_ecr_repository.backend.repository_url}:v1"
+      image     = "${aws_ecr_repository.backend.repository_url}:build-6-25157693bbd78e2831eb287cf07bf6053f70932e"
       essential = true
 
       portMappings = [
@@ -62,6 +71,15 @@ resource "aws_ecs_task_definition" "backend" {
       ]
 
       memoryReservation = 512
+
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs_backend.name
+          "awslogs-region"        = var.aws_region
+          "awslogs-stream-prefix" = "backend"
+        }
+      }
 
       environment = [
         {
