@@ -14,7 +14,7 @@ resource "aws_ecs_task_definition" "frontend" {
     {
 
       name      = "frontend"
-      image     = "${aws_ecr_repository.frontend.repository_url}:build-6-25157693bbd78e2831eb287cf07bf6053f70932e"
+      image     = "${aws_ecr_repository.frontend.repository_url}:build-8-c1a4bc972ec5df1e572d6fc2bb5ed6e0061bb427"
       essential = true
 
       portMappings = [
@@ -60,7 +60,7 @@ resource "aws_ecs_task_definition" "backend" {
   container_definitions = jsonencode([
     {
       name      = "backend"
-      image     = "${aws_ecr_repository.backend.repository_url}:build-6-25157693bbd78e2831eb287cf07bf6053f70932e"
+      image     = "${aws_ecr_repository.backend.repository_url}:build-8-c1a4bc972ec5df1e572d6fc2bb5ed6e0061bb427"
       essential = true
 
       portMappings = [
