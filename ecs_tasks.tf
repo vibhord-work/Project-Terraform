@@ -104,7 +104,16 @@ resource "aws_ecs_task_definition" "backend" {
         {
           name      = "DB_PASSWORD"
           valueFrom = "${aws_db_instance.project_mysql.master_user_secret[0].secret_arn}:password::"
-        }
+        },
+
+        {
+          name      = "MANAGER_PASSWORD_HASH"
+          valueFrom = data.aws_secretsmanager_secret.manager_password_hash.arn
+        },
+        {
+          name      = "MANAGER_SESSION_SECRET"
+          valueFrom = data.aws_secretsmanager_secret.manager_session_secret.arn
+        },
       ]
     }
   ])

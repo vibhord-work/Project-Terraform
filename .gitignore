@@ -18,3 +18,5 @@ tfplan.*
 # Generated Lambda packages
 github_webhook_lambda.zip
 lambda/**/__pycache__/
+
+*.tfplan
