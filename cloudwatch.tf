@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_log_group" "ecs_frontend" {
   name              = "/ecs/${var.project_name}-${var.environment}-frontend"
-  retention_in_days = 7
+  retention_in_days = 7 # NOSONAR - Temporary POC; 7-day retention is intentional
 
   tags = {
     Environment = var.environment
@@ -10,7 +10,7 @@ resource "aws_cloudwatch_log_group" "ecs_frontend" {
 
 resource "aws_cloudwatch_log_group" "ecs_backend" {
   name              = "/ecs/${var.project_name}-${var.environment}-backend"
-  retention_in_days = 7
+  retention_in_days = 7 # NOSONAR - Temporary POC; 7-day retention is intentional
 
   tags = {
     Environment = var.environment
