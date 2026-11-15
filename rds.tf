@@ -35,9 +35,10 @@ resource "aws_db_instance" "project_mysql" {
   publicly_accessible = false
   multi_az            = false
 
-  backup_retention_period = 1
-  deletion_protection     = false
-  skip_final_snapshot     = true
+  backup_retention_period   = 1
+  deletion_protection       = true
+  skip_final_snapshot       = false
+  final_snapshot_identifier = "project-poc-mysql-final"
 
   auto_minor_version_upgrade = true
 
