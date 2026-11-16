@@ -47,4 +47,7 @@ resource "aws_db_instance" "project_mysql" {
     Environment = var.environment
     ManagedBy   = "Terraform"
   }
+  lifecycle {
+    prevent_destroy = true
+  }
 }
