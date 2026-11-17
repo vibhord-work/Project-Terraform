@@ -1,3 +1,4 @@
+
 data "aws_iam_policy_document" "jenkins_deployment" {
 
   statement {
@@ -8,6 +9,7 @@ data "aws_iam_policy_document" "jenkins_deployment" {
 
   statement {
     sid = "ECRImagePush"
+
     actions = [
       "ecr:BatchCheckLayerAvailability",
       "ecr:BatchGetImage",
@@ -16,9 +18,29 @@ data "aws_iam_policy_document" "jenkins_deployment" {
       "ecr:PutImage",
       "ecr:UploadLayerPart"
     ]
+
     resources = [
       "arn:aws:ecr:${var.aws_region}:460249938865:repository/project-poc-frontend",
       "arn:aws:ecr:${var.aws_region}:460249938865:repository/project-poc-backend"
+    ]
+  }
+
+  statement {
+    sid = "ECRImageInspection"
+
+    actions = [
+      "ecr:DescribeRepositories",
+      "ecr:DescribeImages"
+    ]
+
+    resources = ["*"]
+  }
+
+  statement {
+    sid     = "ECSDescribeCluster"
+    actions = ["ecs:DescribeClusters"]
+    resources = [
+      "arn:aws:ecs:${var.aws_region}:460249938865:cluster/project-poc-ecs-cluster"
     ]
   }
 
@@ -30,9 +52,11 @@ data "aws_iam_policy_document" "jenkins_deployment" {
 
   statement {
     sid = "ECSRegisterTaskDefinitions"
+
     actions = [
       "ecs:RegisterTaskDefinition"
     ]
+
     resources = [
       "arn:aws:ecs:${var.aws_region}:460249938865:task-definition/project-poc-frontend:*",
       "arn:aws:ecs:${var.aws_region}:460249938865:task-definition/project-poc-backend:*"
@@ -41,10 +65,12 @@ data "aws_iam_policy_document" "jenkins_deployment" {
 
   statement {
     sid = "ECSServiceDeployment"
+
     actions = [
       "ecs:UpdateService",
       "ecs:DescribeServices"
     ]
+
     resources = [
       "arn:aws:ecs:${var.aws_region}:460249938865:service/project-poc-ecs-cluster/project-poc-frontend-service",
       "arn:aws:ecs:${var.aws_region}:460249938865:service/project-poc-ecs-cluster/project-poc-backend-service"
@@ -54,6 +80,7 @@ data "aws_iam_policy_document" "jenkins_deployment" {
   statement {
     sid     = "PassECSTaskRoles"
     actions = ["iam:PassRole"]
+
     resources = [
       aws_iam_role.ecs_task_execution_role.arn,
       aws_iam_role.ecs_task_role.arn
