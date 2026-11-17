@@ -3,7 +3,7 @@ resource "aws_ecs_cluster" "project_cluster" {
 
   setting {
     name  = "containerInsights"
-    value = "disabled"
+    value = "enabled"
   }
 
   tags = {
