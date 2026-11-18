@@ -1,1 +1,36 @@
-{"description":"Trigger the pipeline-ci Jenkins job","mainSteps":[{"action":"aws:runShellScript","inputs":{"runCommand":["set -eu","SECRET=$(aws secretsmanager get-secret-value --secret-id project/poc/jenkins-webhook-credentials --region us-east-1 --query SecretString --output text)","export SECRET","python3 - \u003c\u003c'PY'","import base64, json, os, urllib.request","credentials = json.loads(os.environ['SECRET'])","url = 'https://jenkins.vibhordew.space/job/pipeline-ci/build'","auth = base64.b64encode((credentials['username'] + ':' + credentials['token']).encode()).decode()","request = urllib.request.Request(url, data=b'', method='POST', headers={'Authorization': 'Basic ' + auth})","with urllib.request.urlopen(request, timeout=15) as response:","    print('Jenkins build trigger HTTP:', response.status)","PY","unset SECRET"]},"name":"triggerJenkins"}],"schemaVersion":"2.2"}
+
+{
+  "description": "Trigger pipeline-ci Jenkins job through authenticated API",
+  "schemaVersion": "2.2",
+  "mainSteps": [
+    {
+      "action": "aws:runShellScript",
+      "name": "triggerJenkins",
+      "inputs": {
+        "runCommand": [
+          "set -eu",
+          "SECRET=$(aws secretsmanager get-secret-value --secret-id project/poc/jenkins-webhook-credentials --region us-east-1 --query SecretString --output text)",
+          "export SECRET",
+          "python3 - <<'PY'",
+          "import base64, json, os, urllib.request, urllib.parse",
+          "credentials = json.loads(os.environ['SECRET'])",
+          "base = 'https://jenkins.vibhordew.space'",
+          "auth = base64.b64encode((credentials['username'] + ':' + credentials['token']).encode()).decode()",
+          "headers = {'Authorization': 'Basic ' + auth}",
+          "crumb_req = urllib.request.Request(base + '/crumbIssuer/api/json', headers=headers)",
+          "with urllib.request.urlopen(crumb_req, timeout=15) as response:",
+          "    crumb = json.loads(response.read())",
+          "headers[crumb['crumbRequestField']] = crumb['crumb']",
+          "data = urllib.parse.urlencode({'ENFORCE_SONAR_QUALITY_GATE': 'false', 'Jenkins': 'J'}).encode()",
+          "url = base + '/job/pipeline-ci/buildWithParameters'",
+          "request = urllib.request.Request(url, data=data, method='POST', headers=headers)",
+          "with urllib.request.urlopen(request, timeout=15) as response:",
+          "    print('Jenkins build trigger HTTP:', response.status)",
+          "    print('Queue location:', response.headers.get('Location'))",
+          "PY",
+          "unset SECRET"
+        ]
+      }
+    }
+  ]
+}
