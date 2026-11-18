@@ -92,3 +92,33 @@ variable "route_private_traffic_through_nat_instance" {
     error_message = "Enable the NAT instance before routing through it, and keep the NAT Gateway enabled until the route is switched to the NAT instance."
   }
 }
+
+
+variable "use_ecs_mysql" {
+  description = "Switch the backend database connection to ECS-hosted MySQL only after data import and verification"
+  type        = bool
+  default     = false
+}
+
+variable "mysql_host_instance_type" {
+  description = "Dedicated ECS EC2 instance type for the MySQL service"
+  type        = string
+  default     = "t3.small"
+}
+
+variable "mysql_data_volume_size" {
+  description = "Size in GiB of the separately managed persistent MySQL EBS data volume"
+  type        = number
+  default     = 30
+
+  validation {
+    condition     = var.mysql_data_volume_size >= 20
+    error_message = "The MySQL data volume must be at least 20 GiB."
+  }
+}
+
+variable "mysql_database_name" {
+  description = "Application database name created by the MySQL container"
+  type        = string
+  default     = "HospitalDBMS"
+}
