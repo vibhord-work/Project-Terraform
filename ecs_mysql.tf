@@ -128,7 +128,6 @@ resource "aws_instance" "mysql_ecs_host" {
   }
 
   depends_on = [
-    aws_volume_attachment.mysql_data,
     aws_iam_role_policy_attachment.ecs_instance_policy,
     aws_iam_role_policy_attachment.ecs_instance_ssm
   ]
