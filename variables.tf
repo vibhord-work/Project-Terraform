@@ -88,7 +88,7 @@ variable "route_private_traffic_through_nat_instance" {
   default     = false
 
   validation {
-    condition     = !var.route_private_traffic_through_nat_instance || var.enable_nat_instance
-    error_message = "Enable the NAT instance before routing private subnet traffic through it."
+    condition     = (!var.route_private_traffic_through_nat_instance || var.enable_nat_instance) && (var.route_private_traffic_through_nat_instance || !var.enable_nat_instance || var.enable_nat_gateway)
+    error_message = "Enable the NAT instance before routing through it, and keep the NAT Gateway enabled until the route is switched to the NAT instance."
   }
 }
