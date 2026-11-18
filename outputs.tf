@@ -54,3 +54,24 @@ output "ecs_mysql_credentials_secret_arn" {
   description = "Secrets Manager ARN for ECS MySQL credentials (not the secret values)"
   value       = aws_secretsmanager_secret.ecs_mysql_credentials.arn
 }
+
+
+output "ecs_cluster_name" {
+  description = "ECS cluster name"
+  value       = aws_ecs_cluster.project_cluster.name
+}
+
+output "backend_ecs_service_name" {
+  description = "Backend ECS service name"
+  value       = aws_ecs_service.backend.name
+}
+
+output "backend_task_definition_arn" {
+  description = "Current Terraform-managed backend task definition ARN"
+  value       = aws_ecs_task_definition.backend.arn
+}
+
+output "aws_region" {
+  description = "AWS deployment region"
+  value       = var.aws_region
+}
