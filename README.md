@@ -9,7 +9,7 @@ Terraform configuration for the HospitalDBMS AWS proof of concept.
 - Jenkins, ECS container instances, ECS tasks, and RDS remain private.
 - A cost-optimized EC2 NAT instance (t3.micro) can provide outbound connectivity to private subnets.
 - An S3 Gateway VPC Endpoint is created for private S3 access without an endpoint hourly charge.
-- RDS MySQL remains the managed database until a separately reviewed, data-preserving migration to an ECS-hosted MySQL design is completed.
+- RDS MySQL remains provisioned as the rollback source. A dedicated ECS EC2 host now runs the MySQL target with a separately managed encrypted EBS data volume. The backend remains on RDS by default; switch it only after data import and verification by setting use_ecs_mysql = true.
 
 ## NAT Gateway to NAT Instance migration
 
