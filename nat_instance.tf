@@ -46,12 +46,12 @@ resource "aws_security_group" "nat_instance" {
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "nat_from_vpc" {
-  count = var.enable_nat_instance ? 1 : 0
+resource "aws_vpc_security_group_ingress_rule" "nat_from_private_subnets" {
+  count = var.enable_nat_instance ? length(var.private_subnet_cidrs) : 0
 
   security_group_id = aws_security_group.nat_instance[0].id
-  description       = "Forwarded private-subnet traffic from the project VPC"
-  cidr_ipv4         = var.vpc_cidr
+  description       = "Forwarded traffic from private subnet ${var.private_subnet_cidrs[count.index]}"
+  cidr_ipv4         = var.private_subnet_cidrs[count.index]
   ip_protocol       = "-1"
 }
 
