@@ -62,7 +62,29 @@ Only after the data import and application-level verification succeed, set:
 use_ecs_mysql = true
 ```
 
-Review the Terraform plan. It should update the backend task definition to use DB_HOST=mysql.db.internal and the new Secrets Manager credentials. RDS must remain running and protected. Apply, wait for the backend deployment to stabilize, and test patient login, patient creation, doctor/staff views, appointments, bills, prescriptions, and other application workflows.
+Review the Terraform plan. It should create a new backend task-definition revision using DB_HOST=mysql.db.internal and the new Secrets Manager credentials. RDS must remain running and protected.
+Important: the existing backend ECS service intentionally ignores Terraform changes to task_definition so Jenkins deployments are not overwritten by routine Terraform applies. Therefore, after Terraform apply, explicitly deploy the new task-definition revision:
+
+~~~bash
+CLUSTER=$(terraform output -raw ecs_cluster_name)
+SERVICE=$(terraform output -raw backend_ecs_service_name)
+TASK_DEF=$(terraform output -raw backend_task_definition_arn)
+REGION=$(terraform output -raw aws_region)
+
+aws ecs update-service \
+  --cluster "$CLUSTER" \
+  --service "$SERVICE" \
+  --task-definition "$TASK_DEF" \
+  --force-new-deployment \
+  --region "$REGION"
+
+aws ecs wait services-stable \
+  --cluster "$CLUSTER" \
+  --services "$SERVICE" \
+  --region "$REGION"
+~~~
+
+Then test patient login, patient creation, doctor/staff views, appointments, bills, prescriptions, and other application workflows. Keep the previous task definition revision available for rollback.
 
 ### Phase 4 — Rollback window and eventual RDS retirement
 
