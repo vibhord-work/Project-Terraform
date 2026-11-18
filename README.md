@@ -71,13 +71,13 @@ Review the plan to ensure only the NAT Gateway and its Elastic IP are removed an
 - The NAT instance can become a throughput bottleneck. Monitor CPU, network packets/bytes, connection tracking, and application timeouts.
 - A NAT instance still incurs EC2, EBS, public IPv4, and data-transfer charges. A t3.micro is a starting point, not a throughput guarantee.
 
-## Database migration safety
+## ECS MySQL migration safety
 
-RDS is currently private, encrypted, deletion-protected, and protected by Terraform prevent_destroy. Do not remove these safeguards or destroy RDS as part of the NAT migration.
+Terraform now provisions a dedicated private ECS EC2 host, a separately managed encrypted gp3 data volume, a MySQL 8.0 ECS service, Cloud Map DNS (mysql.db.internal), Secrets Manager credentials, and CloudWatch logging. The MySQL task is pinned to the dedicated host and mounts /mnt/mysql-data at /var/lib/mysql.
 
-The application stores patient, appointment, and related hospital records. Before moving MySQL into ECS, take and verify an RDS snapshot, export the database, restore into a persistent ECS-hosted MySQL target, validate schema/row counts/application reads and writes, then switch the backend connection. Keep RDS available for rollback until the new database is proven.
+The backend remains connected to RDS by default (`use_ecs_mysql = false`). Do not switch it until a verified RDS snapshot/export/import and application validation are complete. Set `use_ecs_mysql = true` only in a separate reviewed apply after the ECS database contains the verified application data. Keep RDS deletion protection and Terraform prevent_destroy throughout the rollback window.
 
-Important ECS storage limitation: ECS-managed EBS volumes attached to tasks maintained by an ECS service are deleted when those tasks terminate. Do not use that service volume feature as the only persistent database storage. A containerized MySQL design needs a separately managed persistent data volume and a deliberate single-instance placement/backup/recovery design. This has operational trade-offs and may not be cheaper than the existing small RDS instance once EC2, EBS snapshots, and maintenance are included.
+The MySQL host and EBS data volume are single-AZ and are not highly available. ECS-managed EBS volumes attached to service tasks are not used as the persistent store; the separately managed EBS volume is protected with prevent_destroy. Terraform state contains generated database credentials, so use encrypted, access-controlled remote state and never commit local state or secret values.
 
 ## Terraform workflow
 
