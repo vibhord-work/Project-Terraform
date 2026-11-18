@@ -99,12 +99,12 @@ resource "aws_instance" "mysql_ecs_host" {
     chmod 750 /mnt/mysql-data
 
     cat > /etc/ecs/ecs.config <<'ECS_CONFIG'
-    ECS_CLUSTER=${aws_ecs_cluster.project_cluster.name}
-    ECS_INSTANCE_ATTRIBUTES={"role":"database"}
-    ECS_ENABLE_TASK_IAM_ROLE=true
-    ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST=true
-    ECS_AWSVPC_BLOCK_IMDS=true
-    ECS_CONFIG
+  ECS_CLUSTER=${aws_ecs_cluster.project_cluster.name}
+  ECS_INSTANCE_ATTRIBUTES={"role":"database"}
+  ECS_ENABLE_TASK_IAM_ROLE=true
+  ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST=true
+  ECS_AWSVPC_BLOCK_IMDS=true
+  ECS_CONFIG
 
     systemctl enable ecs
     systemctl start ecs
