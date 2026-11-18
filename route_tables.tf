@@ -29,15 +29,19 @@ resource "aws_route_table" "private" {
   }
 }
 
-resource "aws_route" "private_nat" {
-  count = var.enable_nat_gateway ? length(var.private_subnet_cidrs) : 0
+resource "aws_route" "private_egress" {
+  count = (var.enable_nat_gateway || var.enable_nat_instance) ? length(var.private_subnet_cidrs) : 0
 
   route_table_id         = aws_route_table.private[count.index].id
   destination_cidr_block = "0.0.0.0/0"
 
-  nat_gateway_id = aws_nat_gateway.nat[
+  # Keep the NAT Gateway active during the first NAT-instance deployment.
+  # Switch this flag only after the NAT instance has passed connectivity tests.
+  nat_gateway_id = var.route_private_traffic_through_nat_instance ? null : aws_nat_gateway.nat[
     var.single_nat_gateway ? 0 : count.index
   ].id
+
+  instance_id = var.route_private_traffic_through_nat_instance ? aws_instance.nat_instance[0].id : null
 }
 
 resource "aws_route_table_association" "private" {
