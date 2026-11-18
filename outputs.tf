@@ -17,3 +17,14 @@ output "nat_gateway_ids" {
   description = "NAT Gateway IDs"
   value       = aws_nat_gateway.nat[*].id
 }
+
+
+output "nat_instance_id" {
+  description = "NAT instance ID; empty when NAT instance is disabled"
+  value       = try(aws_instance.nat_instance[0].id, null)
+}
+
+output "nat_instance_public_ip" {
+  description = "NAT instance Elastic IP; empty when NAT instance is disabled"
+  value       = try(aws_eip.nat_instance[0].public_ip, null)
+}
