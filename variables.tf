@@ -69,3 +69,26 @@ variable "single_nat_gateway" {
   type        = bool
   default     = true
 }
+
+variable "enable_nat_instance" {
+  description = "Create a low-cost EC2 NAT instance in the first public subnet"
+  type        = bool
+  default     = false
+}
+
+variable "nat_instance_type" {
+  description = "EC2 instance type for the NAT instance"
+  type        = string
+  default     = "t3.micro"
+}
+
+variable "route_private_traffic_through_nat_instance" {
+  description = "Switch private subnet default routes to the NAT instance after it has been deployed and verified"
+  type        = bool
+  default     = false
+
+  validation {
+    condition     = !var.route_private_traffic_through_nat_instance || var.enable_nat_instance
+    error_message = "Enable the NAT instance before routing private subnet traffic through it."
+  }
+}
