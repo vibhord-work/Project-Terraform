@@ -84,7 +84,7 @@ resource "aws_ecs_task_definition" "backend" {
       environment = [
         {
           name  = "DB_HOST"
-          value = aws_db_instance.project_mysql.address
+          value = var.use_ecs_mysql ? "mysql.db.internal" : aws_db_instance.project_mysql.address
         },
         {
           name  = "DB_PORT"
@@ -92,18 +92,18 @@ resource "aws_ecs_task_definition" "backend" {
         },
         {
           name  = "DB_NAME"
-          value = aws_db_instance.project_mysql.db_name
+          value = var.use_ecs_mysql ? var.mysql_database_name : aws_db_instance.project_mysql.db_name
         }
       ]
 
       secrets = [
         {
           name      = "DB_USER"
-          valueFrom = "${aws_db_instance.project_mysql.master_user_secret[0].secret_arn}:username::"
+          valueFrom = var.use_ecs_mysql ? "${aws_secretsmanager_secret.ecs_mysql_credentials.arn}:username::" : "${aws_db_instance.project_mysql.master_user_secret[0].secret_arn}:username::"
         },
         {
           name      = "DB_PASSWORD"
-          valueFrom = "${aws_db_instance.project_mysql.master_user_secret[0].secret_arn}:password::"
+          valueFrom = var.use_ecs_mysql ? "${aws_secretsmanager_secret.ecs_mysql_credentials.arn}:password::" : "${aws_db_instance.project_mysql.master_user_secret[0].secret_arn}:password::"
         },
 
         {
