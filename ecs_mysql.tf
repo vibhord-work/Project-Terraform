@@ -277,7 +277,6 @@ resource "aws_ecs_service" "mysql" {
 
   service_registries {
     registry_arn = aws_service_discovery_service.mysql.arn
-    port         = 3306
   }
 
   depends_on = [
