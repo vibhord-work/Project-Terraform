@@ -77,6 +77,7 @@ resource "aws_instance" "mysql_ecs_host" {
     set -euxo pipefail
 
     systemctl stop ecs || true
+    dnf install -y xfsprogs
 
     DATA_DEVICE="/dev/disk/by-id/nvme-Amazon_Elastic_Block_Store_${replace(aws_ebs_volume.mysql_data.id, "-", "")}"
     for attempt in $(seq 1 120); do
