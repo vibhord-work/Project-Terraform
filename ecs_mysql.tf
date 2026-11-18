@@ -103,6 +103,7 @@ resource "aws_instance" "mysql_ecs_host" {
     ECS_INSTANCE_ATTRIBUTES={"role":"database"}
     ECS_ENABLE_TASK_IAM_ROLE=true
     ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST=true
+    ECS_AWSVPC_BLOCK_IMDS=true
     ECS_CONFIG
 
     systemctl enable ecs
