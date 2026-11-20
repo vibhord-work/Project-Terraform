@@ -101,7 +101,10 @@ resource "aws_lb_listener_rule" "jenkins_https" {
 
   condition {
     source_ip {
-      values = ["103.198.165.116/32"]
+      values = [
+        "103.198.165.116/32",
+        "32.201.253.157/32"
+      ]
     }
   }
 }

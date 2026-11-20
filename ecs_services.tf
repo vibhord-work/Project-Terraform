@@ -1,7 +1,7 @@
 resource "aws_ecs_service" "frontend" {
   name            = "${var.project_name}-${var.environment}-frontend-service"
   cluster         = aws_ecs_cluster.project_cluster.id
-  task_definition = aws_ecs_task_definition.frontend.arn
+  task_definition = var.frontend_bootstrap_task_definition_arn
   desired_count   = 1
 
   lifecycle {
@@ -28,7 +28,7 @@ resource "aws_ecs_service" "frontend" {
 
   health_check_grace_period_seconds = 120
 
-  deployment_minimum_healthy_percent = 0
+  deployment_minimum_healthy_percent = 100
   deployment_maximum_percent         = 200
 
   depends_on = [
@@ -46,7 +46,7 @@ resource "aws_ecs_service" "frontend" {
 resource "aws_ecs_service" "backend" {
   name            = "${var.project_name}-${var.environment}-backend-service"
   cluster         = aws_ecs_cluster.project_cluster.id
-  task_definition = aws_ecs_task_definition.backend.arn
+  task_definition = var.backend_bootstrap_task_definition_arn
   desired_count   = 1
 
   lifecycle {
@@ -73,7 +73,7 @@ resource "aws_ecs_service" "backend" {
 
   health_check_grace_period_seconds = 120
 
-  deployment_minimum_healthy_percent = 0
+  deployment_minimum_healthy_percent = 100
   deployment_maximum_percent         = 200
 
   depends_on = [

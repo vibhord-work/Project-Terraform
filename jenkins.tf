@@ -46,7 +46,7 @@ resource "aws_vpc_security_group_egress_rule" "jenkins_outbound" {
 }
 
 resource "aws_instance" "jenkins" {
-  ami                         = data.aws_ssm_parameter.jenkins_ami.value
+  ami                         = "ami-096ef200a877f36af"
   instance_type               = "m7i-flex.large"
   subnet_id                   = aws_subnet.private[0].id
   vpc_security_group_ids      = [aws_security_group.jenkins_sg.id]
