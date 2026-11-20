@@ -69,3 +69,15 @@ variable "single_nat_gateway" {
   type        = bool
   default     = true
 }
+
+variable "frontend_bootstrap_task_definition_arn" {
+  description = "Active Jenkins-managed task definition ARN for frontend service creation or recovery. Update this value if its revision becomes inactive."
+  type        = string
+  default     = "arn:aws:ecs:us-east-1:460249938865:task-definition/project-poc-frontend:34"
+}
+
+variable "backend_bootstrap_task_definition_arn" {
+  description = "Active Jenkins-managed task definition ARN for backend service creation or recovery. Update this value if its revision becomes inactive."
+  type        = string
+  default     = "arn:aws:ecs:us-east-1:460249938865:task-definition/project-poc-backend:34"
+}

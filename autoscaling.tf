@@ -9,7 +9,7 @@ resource "aws_autoscaling_group" "ecs" {
 
   launch_template {
     id      = aws_launch_template.ecs.id
-    version = "$Latest"
+    version = "3"
   }
 
   health_check_type         = "EC2"
