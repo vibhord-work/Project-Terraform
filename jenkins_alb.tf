@@ -103,7 +103,8 @@ resource "aws_lb_listener_rule" "jenkins_https" {
     source_ip {
       values = [
         "103.198.165.116/32",
-        "32.201.253.157/32"
+        "32.201.253.157/32",
+        "103.198.165.142/32"
       ]
     }
   }
