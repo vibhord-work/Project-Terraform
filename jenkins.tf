@@ -74,3 +74,12 @@ resource "aws_instance" "jenkins" {
 output "jenkins_instance_id" {
   value = aws_instance.jenkins.id
 }
+
+resource "aws_vpc_security_group_ingress_rule" "jenkins_from_bastion" {
+  security_group_id            = aws_security_group.jenkins_sg.id
+  referenced_security_group_id = aws_security_group.bastion_sg.id
+  description                  = "Allow Jenkins UI access only from Bastion Host"
+  from_port                    = 8080
+  to_port                      = 8080
+  ip_protocol                  = "tcp"
+}
